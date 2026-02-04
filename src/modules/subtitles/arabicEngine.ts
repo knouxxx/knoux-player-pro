@@ -24,7 +24,7 @@ export class ArabicEngine {
   public static processBidi(text: string): string {
     if (!this.isArabic(text)) return text;
     // إضافة علامات Unicode لإجبار المتصفح/المحرك على العرض اليميني الكامل
-    return \\u202B\\u202C\;
+    return `\u202B${text}\u202C`;
   }
 
   /**

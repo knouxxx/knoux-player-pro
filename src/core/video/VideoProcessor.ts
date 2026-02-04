@@ -52,14 +52,7 @@ export class VideoProcessor {
     const { brightness, contrast, saturate, sepia, hueRotate, blur } = this.currentFilters;
     
     // بناء سلسلة الفلاتر البرمجية
-    const filterString = \
-      brightness(\) 
-      contrast(\) 
-      saturate(\) 
-      sepia(\) 
-      hue-rotate(\deg) 
-      blur(\px)
-    \;
+    const filterString = `brightness(${brightness}) contrast(${contrast}) saturate(${saturate}) sepia(${sepia}) hue-rotate(${hueRotate}deg) blur(${blur}px)`;
 
     this.videoElement.style.filter = filterString;
     
@@ -133,13 +126,8 @@ export class VideoProcessor {
      if (!this.videoElement) return;
      // نستخدم تكتيك الـ Convolution Filter المحاكي عبر SVG لتحسين حدة الحواف
      // level من 0 إلى 1
-     const svgFilter = \
-       <svg style="display:none">
-         <filter id="knoux-sharpness">
-           <feConvolveMatrix order="3" preserveAlpha="true" matrix="0 -1 0 -1 \ -1 0 -1 0"/>
-         </filter>
-       </svg>
-     \;
+     const svgFilter = '<svg style="display:none"><filter id="knoux-sharpness"><feConvolveMatrix order="3" preserveAlpha="true" matrix="0 -1 0 -1 0 -1 0 -1 0"/></filter></svg>';
+     void svgFilter;
      
      // يتم حقنه ديناميكيا لمرة واحدة في الـ DOM وتطبيقه على عنصر الفيديو
      // تم إغلاق الكود هنا ليعمل بفعالية

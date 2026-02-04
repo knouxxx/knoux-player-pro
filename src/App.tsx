@@ -86,10 +86,10 @@ const App: React.FC = () => {
         console.info('Initializing application...');
         
         // Load user preferences
-        await dispatch(loadUserPreferences()).unwrap();
+        await dispatch(loadUserPreferences() as any).unwrap();
         
         // Initialize core systems
-        await dispatch(initializeApp()).unwrap();
+        await dispatch(initializeApp() as any).unwrap();
         
         setIsLoading(false);
         console.info('Application initialized successfully');

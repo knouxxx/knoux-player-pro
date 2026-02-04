@@ -92,7 +92,7 @@ export class SceneMoodAnalyzer {
     // الاتصال بمحرك الثيمات لتحديث أجواء التطبيق فوراً
     if (themeManager.getCurrentThemeName() !== mode) {
       themeManager.setTheme(mode);
-      console.log(\[KNOUX AI]: Mood Detected. Atmosphere set to \\);
+      console.log(`[KNOUX AI]: Mood Detected. Atmosphere set to ${mode}`);
     }
   }
 
