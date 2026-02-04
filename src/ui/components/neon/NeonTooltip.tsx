@@ -1,13 +1,11 @@
-﻿// Generated Neon Glass Component
-// Part of KNOUX Player X™ UI System
 import React from 'react';
 
-const $((Get-Item $componentPath).BaseName) = () => {
-    return (
-        <div className="neon-glass-component">
-            {/* $((Get-Item $componentPath).BaseName) implementation */}
-        </div>
-    );
+const NeonTooltip: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, ...props }) => {
+  return (
+    <div className="neon-NeonTooltip" {...props}>
+      {children}
+    </div>
+  );
 };
 
-export default $((Get-Item $componentPath).BaseName);
+export default NeonTooltip;

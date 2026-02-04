@@ -1,0 +1,47 @@
+name: CI Release Gate
+
+on:
+  pull_request:
+
+jobs:
+  build-test:
+    name: Build and Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Build renderer
+        run: npm run build:renderer
+
+      - name: Build main
+        run: npm run build:main
+
+      - name: Build app
+        run: npm run build
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Package app (Forge)
+        if: runner.os == 'Linux'
+        run: npm run make
+
+      - name: Electron smoke test
+        run: npm run ci:smoke

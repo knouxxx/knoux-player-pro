@@ -1,64 +1,50 @@
-﻿/**
- * Project: KNOUX Player X™
- * Layer: UI -> Localization Context
- */
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-import React, { createContext, useContext, useMemo } from "react";
-import { useSelector } from "react-redux";
-import { selectLocale } from "../state/selectors/localizationSelectors";
-import enCommon from "../localization/en/common.json";
-import enSettings from "../localization/en/settings.json";
-import arCommon from "../localization/ar/common.json";
-import arSettings from "../localization/ar/settings.json";
-
-type Dictionary = Record<string, any>;
-
-const dictionaries: Record<string, Dictionary> = {
-    en: { ...enCommon, ...enSettings },
-    ar: { ...arCommon, ...arSettings }
-};
+type Locale = 'en' | 'ar';
 
 interface LocalizationContextValue {
-    locale: "en" | "ar";
-    t: (key: string) => string;
+  locale: Locale;
+  t: (key: string) => string;
+  setLocale: (locale: Locale) => void;
 }
 
-const LocalizationContext = createContext<LocalizationContextValue>({
-    locale: "en",
-    t: (key) => key
-});
-
-const resolveKey = (dictionary: Dictionary, key: string): string | undefined => {
-    const path = key.split(".");
-    let current: any = dictionary;
-    for (const segment of path) {
-        if (current && typeof current === "object" && segment in current) {
-            current = current[segment];
-        } else {
-            return undefined;
-        }
-    }
-    return typeof current === "string" ? current : undefined;
-};
-
-export const LocalizationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const locale = useSelector(selectLocale);
-    const dictionary = dictionaries[locale] ?? dictionaries.en;
-
-    const value = useMemo<LocalizationContextValue>(() => {
-        return {
-            locale,
-            t: (key: string) => resolveKey(dictionary, key) ?? key
-        };
-    }, [locale, dictionary]);
-
-    return (
-        <LocalizationContext.Provider value={value}>
-            {children}
-        </LocalizationContext.Provider>
-    );
-};
+const LocalizationContext = createContext<LocalizationContextValue | undefined>(undefined);
 
 export const useLocalization = () => {
-    return useContext(LocalizationContext);
+  const context = useContext(LocalizationContext);
+  if (!context) {
+    throw new Error('useLocalization must be used within LocalizationProvider');
+  }
+  return context;
+};
+
+interface LocalizationProviderProps {
+  children: ReactNode;
+}
+
+export const LocalizationProvider: React.FC<LocalizationProviderProps> = ({ children }) => {
+  const [locale, setLocale] = useState<Locale>('en');
+
+  const t = (key: string): string => {
+    const translations: Record<string, Record<Locale, string>> = {
+      'app.title': { en: 'KNOUX Player X', ar: 'مشغل كنوكس إكس' },
+      'player.play': { en: 'Play', ar: 'تشغيل' },
+      'player.pause': { en: 'Pause', ar: 'إيقاف' },
+      'player.stop': { en: 'Stop', ar: 'إيقاف' },
+      'player.volume': { en: 'Volume', ar: 'الصوت' },
+      'settings.title': { en: 'Settings', ar: 'الإعدادات' },
+      'library.title': { en: 'Library', ar: 'المكتبة' },
+      'browser.title': { en: 'Browser', ar: 'المستعرض' },
+    };
+
+    return translations[key]?.[locale] || key;
+  };
+
+  const value: LocalizationContextValue = {
+    locale,
+    t,
+    setLocale,
+  };
+
+  return <LocalizationContext.Provider value={value}>{children}</LocalizationContext.Provider>;
 };
