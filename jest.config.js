@@ -2,8 +2,12 @@
 module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
-    roots: ['<rootDir>/tests/unit'],
-    testMatch: ['**/*.test.ts', '**/*.test.tsx'],
+    roots: ['<rootDir>/tests'],
+    testMatch: [
+        '**/tests/**/*.test.js',
+        '**/tests/**/*.test.ts',
+        '**/tests/**/*.test.tsx'
+    ],
     collectCoverageFrom: [
         'src/**/*.{ts,tsx}',
         '!src/**/*.d.ts'
@@ -11,5 +15,6 @@ module.exports = {
     coverageDirectory: '<rootDir>/coverage',
     moduleNameMapper: {
         '\\.(css|less|scss|sass)$': 'identity-obj-proxy'
-    }
+    },
+    verbose: true
 };
